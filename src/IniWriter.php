@@ -88,8 +88,8 @@ class IniWriter
 
             foreach ($section as $option => $value) {
                 if (is_numeric($option)) {
-                    $option = $sectionName;
-                    $value = array($value);
+                    $option = $value;
+                    $value = false;
                 }
 
                 if (is_array($value)) {
@@ -97,7 +97,11 @@ class IniWriter
                         $ini .= $option . '[] = ' . $this->encodeValue($currentValue) . "\n";
                     }
                 } else {
-                    $ini .= $option . ' = ' . $this->encodeValue($value) . "\n";
+					if (!$value) {
+						$ini .= $option . "\n";
+					} else {
+						$ini .= $option . ' = ' . $this->encodeValue($value) . "\n";
+					}
                 }
             }
 

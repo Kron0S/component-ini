@@ -16,11 +16,8 @@ class IniReader
     /**
      * @var bool
      */
-    private $useNativeFunction;
-
     public function __construct()
     {
-        $this->useNativeFunction = function_exists('parse_ini_string');
     }
 
     /**
@@ -86,11 +83,11 @@ class IniReader
         // See http://3v4l.org/jD1Lh
         $ini .= "\n";
 
-        if ($this->useNativeFunction) {
-            $array = $this->readWithNativeFunction($ini);
-        } else {
+        // if ($this->useNativeFunction) {
+            // $array = $this->readWithNativeFunction($ini);
+        // } else {
             $array = $this->readWithAlternativeImplementation($ini);
-        }
+        // }
 
         return $array;
     }
@@ -158,7 +155,12 @@ class IniReader
             }
 
             // Key-value pair
-            list($key, $value) = explode('=', $line, 2);
+            $keyvalue = explode('=', $line, 2);
+			if (count($keyvalue) == 1) {
+				list($key, $value) = array(false, $keyvalue);
+			} else {
+				list($key, $value) = $keyvalue;
+			}
             $key = trim($key);
             $value = trim($value);
             if (strstr($value, ";")) {
@@ -200,7 +202,11 @@ class IniReader
                 if (substr($key, -2) == '[]') {
                     $globals[substr($key, 0, -2)][] = $value;
                 } else {
-                    $globals[$key] = $value;
+					if (!$key) {
+						$globals[] = $value;
+					} else {
+						$globals[$key] = $value;
+					}
                 }
             } else {
                 if (substr($key, -2) == '[]') {
