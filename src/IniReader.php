@@ -157,7 +157,7 @@ class IniReader
             // Key-value pair
             $keyvalue = explode('=', $line, 2);
 			if (count($keyvalue) == 1) {
-				list($key, $value) = array(false, $keyvalue);
+				list($key, $value) = array(false, $keyvalue[0]);
 			} else {
 				list($key, $value) = $keyvalue;
 			}
