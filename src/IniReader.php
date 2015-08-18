@@ -212,7 +212,11 @@ class IniReader
                 if (substr($key, -2) == '[]') {
                     $values[$i - 1][substr($key, 0, -2)][] = $value;
                 } else {
-                    $values[$i - 1][$key] = $value;
+ 					if (!$key) {
+						$values[$i - 1][] = $value;
+					} else {
+						$values[$i - 1][$key] = $value;
+					}
                 }
             }
         }
